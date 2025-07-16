@@ -47,7 +47,22 @@
   background-color: rgb(255, 0, 0);
   padding: 1rem;
   margin: 1rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
  }
  
+ .status {
+   margin-top: 20px;
+   font-size: 1.5em;
+   color: white;
+   font-weight: bold;
+ }
 
+ .title {
+   color: white;
+   font-size: 2.5em;
+   font-weight: bold;
+   margin-bottom: 20px;
+ }
  

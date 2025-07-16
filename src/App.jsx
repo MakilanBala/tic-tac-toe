@@ -63,7 +63,7 @@ function App() {
   return (
     <>
       <main>
-        <h1>Tic Tac Toe</h1>
+        <h1 className='title'>Tic Tac Toe</h1>
         <div className="container">
           <div className="game">
             <Box value={boxes[0]} onClick={() => handleClick(0)} />
