@@ -76,7 +76,11 @@ function App() {
       const emptyBoxes = boxes.map((box, index) => box === null ? index : null).filter(index => index !== null);
       if (emptyBoxes.length > 0 && !calculateWinner(boxes) && count < 9 ) {
         const randomIndex = Math.floor(Math.random() * emptyBoxes.length);
-        const compMove = emptyBoxes[randomIndex];
+        
+        // console log minimax value
+        console.log("Minimax value for computer move: ", minimax(boxes, compIsX));
+
+        const compMove = minimax(boxes, compIsX)[1];
         handleClick(compMove);
       }
     }
@@ -86,7 +90,7 @@ function App() {
   return (
     <>
       <main>
-        <h1 className='title'>Tic Tac Toe</h1>
+        <h1 className='title'>Unbeatable Tic Tac Toe</h1>
         <div className="container">
           <div className="game">
             <Box value={boxes[0]} onClick={() => handleClick(0)} />
@@ -132,6 +136,64 @@ function calculateWinner(boxes) {
     }
   } 
   return null;
+}
+
+// Minimax algorithm to determine the best move for the computer
+function minimax(state, isMaximizing) {
+  const winner = calculateWinner(state);
+
+  // terminal states
+  if (winner === 'X') {
+    return [1, null]; // win
+  } else if (winner === 'O') {
+    return [-1, null];// loss
+  } else if (state.every(box => box !== null)) {
+    return [0, null]; // Draw
+  }
+
+  // maximizing player (X)
+  if (isMaximizing) {
+    let bestScore = -Infinity;
+    let bestMove = null;
+
+    // loop through all actions
+    for (let i = 0; i < state.length; i++) {
+      if (state[i] === null) {
+        const nextState = JSON.parse(JSON.stringify(state))
+        nextState[i] = 'X'
+        const score = (minimax(nextState, false))[0]
+        if (score > bestScore) {
+          bestMove = i; // store the best move
+        }
+        bestScore = Math.max(score, bestScore)
+        
+      }
+    }
+
+    return [bestScore, bestMove]; // return the best score and move
+  } 
+
+  // minimizing player (O)
+  else {
+    let bestScore = Infinity;
+    let bestMove = null;
+
+    // loop through all actions
+    for (let i = 0; i < state.length; i++) {
+      if (state[i] === null) {
+        const nextState = JSON.parse(JSON.stringify(state))
+        nextState[i] = 'O'
+        const score = (minimax(nextState, true))[0]
+        if (score < bestScore) {
+          bestMove = i; // store the best move
+        }
+        bestScore = Math.min(score, bestScore)
+      }
+    }
+
+    return [bestScore, bestMove]; // return the best score and move
+  }
+
 }
 
 export default App
