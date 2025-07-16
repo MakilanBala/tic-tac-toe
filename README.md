@@ -1,6 +1,6 @@
 # Tic-tac-toe game
 
-Tic tac toe game implementing min-max algorithm. The purpose of this project was to learn how to use react hooks and implement a search algorithm.
+Tic tac toe game implementing minimax algorithm. The purpose of this project was to learn how to use react hooks and implement a search algorithm.
 
 ## References
 
