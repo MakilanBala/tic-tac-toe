@@ -1,5 +1,5 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useRef } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 //Reset Button component
@@ -24,8 +24,8 @@ function Box({ value, onClick }) {
 
 
 function App() {
-  // winning patterns for Tic Tac Toe
-  // each pattern is an array of indices that represent the winning combination
+  // State variables
+
 
   const [count, setCount] = useState(0)
 
@@ -33,7 +33,11 @@ function App() {
 
   const [isX, setIsX] = useState(true);
 
+  const [compIsX, setCompIsX] = useState(Math.floor(Math.random() * 2) === 0);
+
   const winner = calculateWinner(boxes);
+
+  const isFirstMount= useRef(true);
 
   let status;
   if (winner) {
@@ -48,8 +52,9 @@ function App() {
     if (boxes[i] || calculateWinner(boxes)) {
       return; 
     }
-    boxes[i] = isX ? 'X' : 'O';
-    setBoxes(boxes);
+    setBoxes(prev => 
+      prev.map((box, j) => j === i ? (isX ? 'X' : 'O') : box)
+    );
     setIsX(!isX);
     setCount(count + 1);
   }
@@ -58,7 +63,25 @@ function App() {
     setBoxes(Array(9).fill(null));
     setIsX(true);
     setCount(0);
+    setCompIsX(Math.floor(Math.random() * 2) === 0);
   }
+
+  useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
+
+    if (isX === compIsX) {
+      const emptyBoxes = boxes.map((box, index) => box === null ? index : null).filter(index => index !== null);
+      if (emptyBoxes.length > 0 && !calculateWinner(boxes) && count < 9 ) {
+        const randomIndex = Math.floor(Math.random() * emptyBoxes.length);
+        const compMove = emptyBoxes[randomIndex];
+        handleClick(compMove);
+      }
+    }
+  }, [boxes]);
+  
 
   return (
     <>
@@ -89,6 +112,8 @@ function App() {
 }
 
 function calculateWinner(boxes) {
+  // winning patterns for Tic Tac Toe
+  // each pattern is an array of indices that represent the winning combination
   const winPatterns = [
     [0, 1, 2],
     [0, 3, 6],
